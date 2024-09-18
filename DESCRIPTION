@@ -1,0 +1,22 @@
+Package: biocmake
+Version: 0.1.0
+Date: 2024-09-18
+Title: CMake for Bioconductor
+Description:
+    Manages the installation of CMake for building Bioconductor packages.
+    This avoids the need for end-users to manually install CMake on their system.
+    No action is performed if a suitable version of CMake is already available.
+Authors@R: person("Aaron", "Lun", role=c("cre", "aut"), email="infinite.monkeys.with.keyboards@gmail.com")
+Encoding: UTF-8
+VignetteBuilder: knitr
+Imports:
+    utils,
+    tools
+Suggests:
+    knitr,
+    rmarkdown,
+    BiocStyle,
+    testthat
+biocViews:
+    Infrastructure
+RoxygenNote: 7.3.2
