@@ -1,0 +1,120 @@
+---
+title: Cmake for Bioconductor
+author:
+- name: Aaron Lun
+  email: infinite.monkeys.with.keyboards@gmail.com
+date: "Revised: September 18, 2024"
+output:
+  BiocStyle::html_document
+package: biocmake
+vignette: >
+  %\VignetteIndexEntry{Cmake for Bioconductor}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, echo=FALSE, results="hide", message=FALSE}
+require(knitr)
+opts_chunk$set(error=FALSE, message=FALSE, warning=FALSE)
+
+library(BiocStyle)
+self <- Biocpkg("biocmake")
+```
+
+# Overview
+
+`r self` provides consistent access to [Cmake](https://cmake.org) for use in building Bioconductor packages.
+The idea is to check if an appropriate version of Cmake is already available on the host machine,
+and if not, download and install a local copy of Cmake managed by `r self`.
+This avoids for end-users to manually install Cmake via `SystemRequirements: cmake`.
+To find the Cmake executable:
+
+```{r}
+biocmake::find()
+```
+
+This will return either the Cmake command on the `PATH` (if it is of a suitable version).
+or will return the cached path to a Cmake executable after downloading the binaries (otherwise).
+Developers can use this in a system call in their `configure` scripts to build Cmake projects for their own packages.
+
+# Worked example
+
+Let's mock up a Cmake project.
+
+```{r}
+project <- tempfile()
+dir.create(project)
+
+write(file=file.path(project, "CMakeLists.txt"), '
+cmake_minimum_required(VERSION 3.25)
+
+project(bctest VERSION 2.0.1 LANGUAGES CXX)
+
+add_library(superfoo src/superfoo.cpp)
+target_include_directories(superfoo PUBLIC include)
+')
+
+dir.create(file.path(project, "src"))
+write(file=file.path(project, "src", "superfoo.cpp"), '
+int superfoo(int a, int b) {
+    return a + b;
+}
+')
+
+dir.create(file.path(project, "include"))
+write(file=file.path(project, "include", "superfoo.h"), '
+#ifndef SUPERFOO_H
+#define SUPERFOO_H
+
+int superfoo(int, int);
+
+#endif
+')
+```
+
+We then use `r self` to build it through the Cmake executable identified by `find()`.
+The `configure()` command collects some compilation settings used to build R itself and propagates this to the Cmake project,
+e.g., to ensure that the same compilers are used.
+
+```{r}
+# Removing some of the configuration parameters that we don't need.
+config <- biocmake::configure(c.compiler=FALSE, fortran.compiler=FALSE)
+config.args <- biocmake::formatArguments(config)
+
+cmake <- biocmake::find()
+build <- tempfile()
+status <- system2(cmake, c(config.args, "-S", project, "-B", build))
+stopifnot(status == 0L)
+
+status <- system2(cmake, c("--build", build))
+stopifnot(status == 0L)
+```
+
+Developers should execute these commands in their package's `configure(.win)` file.
+This ensures that the CMake project is built first so that it is available for linking to the package's shared library.
+
+# Setting defaults
+
+Most default behaviors of `r self` are documented in the following functions,
+which can in turn be controlled by environment variables.
+
+```{r}
+biocmake::defaultCommand()
+biocmake::defaultMinimumVersion()
+biocmake::defaultDownloadVersion()
+biocmake::defaultCacheDirectory()
+```
+
+For example:
+
+```{r}
+Sys.setenv(BIOCMAKE_CMAKE_MINIMUM_VERSION="3.27.4")
+biocmake::defaultMinimumVersion()
+```
+
+# Session information {-}
+
+```{r}
+sessionInfo()
+```
+
