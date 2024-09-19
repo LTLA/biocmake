@@ -7,11 +7,18 @@
 \usage{
 configure(
   c.compiler = TRUE,
+  c.flags = c.compiler,
   cxx.compiler = TRUE,
+  cxx.flags = cxx.compiler,
   fortran.compiler = TRUE,
+  fortran.flags = fortran.compiler,
+  cpp.flags = c.compiler || cxx.compiler,
+  pic.flags = TRUE,
+  ld.flags = c("exe", "module", "shared"),
   make = TRUE,
   ar = TRUE,
-  ranlib = TRUE
+  ranlib = TRUE,
+  release.build = TRUE
 )
 
 formatArguments(options)
@@ -19,9 +26,22 @@ formatArguments(options)
 \arguments{
 \item{c.compiler}{Logical scalar indicating whether to propagate R's choice of C compiler.}
 
+\item{c.flags}{Logical scalar indicating whether to propagate R's choice of C flags.}
+
 \item{cxx.compiler}{Logical scalar indicating whether to propagate R's choice of C++ compiler.}
 
+\item{cxx.flags}{Logical scalar indicating whether to propagate R's choice of C++ flags.}
+
 \item{fortran.compiler}{Logical scalar indicating whether to propagate R's choice of Fortran compiler.}
+
+\item{fortran.flags}{Logical scalar indicating whether to propagate R's choice of Fortran flags.}
+
+\item{cpp.flags}{Logical scalar indicating whether to propagate R's choice of C/C++ preprocessing flags.}
+
+\item{pic.flags}{Logical scalar indicating whether to propagate R's choice of each language's position-independent flags.
+This also sets the \code{CMAKE_POSITION_INDEPENDENT_CODE} variable.}
+
+\item{ld.flags}{Logical scalar indicating whether to add R's choice of linker flags to the CMake variables for each target type.}
 
 \item{make}{Logical scalar indicating whether to propagate R's choice of \code{make} command.}
 
