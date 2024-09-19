@@ -4,8 +4,8 @@
 #'
 #' @param command String containing the command to check for an existing installation.
 #' @param minimum.version String specifying the minimum acceptable version of an existing installation.
-#' @param download Logical scalar indicating whether to download Cmake if no acceptable existing installation can be found.
-#' @param ... Further arguments to pass to \code{\link{downloadCmake}}.
+#' @param can.download Logical scalar indicating whether to download Cmake if no acceptable existing installation can be found.
+#' @param ... Further arguments to pass to \code{\link{download}}.
 #'
 #' @return String containing the command to use to run Cmake.
 #'
@@ -16,9 +16,9 @@
 #'
 #' @export
 find <- function(
-    command=defaultCmakeCommand(),
-    minimum.version=defaultCmakeMinimumVersion(),
-    download=TRUE,
+    command=defaultCommand(),
+    minimum.version=defaultMinimumVersion(),
+    can.download=TRUE,
     ...)
 {
     override <- Sys.getenv("BIOCMAKE_CMAKE_PATH", NA)
@@ -35,10 +35,10 @@ find <- function(
         return(command)
     }
 
-    if (!download) {
+    if (!can.download) {
         return(NULL)
     }
 
-    downloadCmake(...)
+    download(...)
 }
 

@@ -5,9 +5,9 @@
 \title{Find Cmake}
 \usage{
 find(
-  command = defaultCmakeCommand(),
-  minimum.version = defaultCmakeMinimumVersion(),
-  download = TRUE,
+  command = defaultCommand(),
+  minimum.version = defaultMinimumVersion(),
+  can.download = TRUE,
   ...
 )
 }
@@ -16,9 +16,9 @@ find(
 
 \item{minimum.version}{String specifying the minimum acceptable version of an existing installation.}
 
-\item{download}{Logical scalar indicating whether to download Cmake if no acceptable existing installation can be found.}
+\item{can.download}{Logical scalar indicating whether to download Cmake if no acceptable existing installation can be found.}
 
-\item{...}{Further arguments to pass to \code{\link{downloadCmake}}.}
+\item{...}{Further arguments to pass to \code{\link{download}}.}
 }
 \value{
 String containing the command to use to run Cmake.
