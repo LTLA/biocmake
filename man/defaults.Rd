@@ -2,43 +2,43 @@
 % Please edit documentation in R/defaults.R
 \name{defaults}
 \alias{defaults}
-\alias{defaultCmakeDownloadVersion}
-\alias{defaultCmakeMinimumVersion}
-\alias{defaultCmakeCacheDirectory}
+\alias{defaultDownloadVersion}
+\alias{defaultMinimumVersion}
+\alias{defaultCacheDirectory}
 \title{Defaults for \pkg{biocmake}}
 \usage{
-defaultCmakeDownloadVersion()
+defaultDownloadVersion()
 
-defaultCmakeMinimumVersion()
+defaultMinimumVersion()
 
-defaultCmakeCacheDirectory()
+defaultCacheDirectory()
 }
 \value{
-For \code{defaultCmakeCommand}, a string specifying the expected command-line invocation of an existing Cmake installation.
+For \code{defaultCommand}, a string specifying the expected command-line invocation of an existing Cmake installation.
 
-For \code{defaultCmakeDownloadVersion}, a string specifying the version of Cmake to download if no existing installation can be found.
+For \code{defaultDownloadVersion}, a string specifying the version of Cmake to download if no existing installation can be found.
 
-For \code{defaultCmakeMinimumVersion}, a string specifying the minimum version of an existing Cmake installation.
+For \code{defaultMinimumVersion}, a string specifying the minimum version of an existing Cmake installation.
 
-For \code{defaultCmakeCacheDirectory}, a string containing the path to the cache directory for \pkg{biocmake}-managed Cmake installations.
+For \code{defaultCacheDirectory}, a string containing the path to the cache directory for \pkg{biocmake}-managed Cmake installations.
 }
 \description{
 Defaults for \pkg{biocmake}
 }
 \details{
-The \code{BIOCMAKE_CMAKE_COMMAND} environment variable will override the default setting of \code{defaultCmakeCommand}.
+The \code{BIOCMAKE_CMAKE_COMMAND} environment variable will override the default setting of \code{defaultCommand}.
 
-The \code{BIOCMAKE_CMAKE_DOWNLOAD_VERSION} environment variable will override the default setting of \code{defaultCmakeDownloadVersion}.
+The \code{BIOCMAKE_CMAKE_DOWNLOAD_VERSION} environment variable will override the default setting of \code{defaultDownloadVersion}.
 
-The \code{BIOCMAKE_CMAKE_MINIMUM_VERSION} environment variable will override the default setting of \code{defaultCmakeMinimumVersion}.
+The \code{BIOCMAKE_CMAKE_MINIMUM_VERSION} environment variable will override the default setting of \code{defaultMinimumVersion}.
 
-The \code{BIOCMAKE_CMAKE_CACHE_DIRECTORY} environment variable will override the default setting of \code{defaultCmakeCacheDirectory}.
+The \code{BIOCMAKE_CMAKE_CACHE_DIRECTORY} environment variable will override the default setting of \code{defaultCacheDirectory}.
 }
 \examples{
-defaultCmakeCommand()
-defaultCmakeDownloadVersion()
-defaultCmakeMinimumVersion()
-defaultCmakeCacheDirectory()
+defaultCommand()
+defaultDownloadVersion()
+defaultMinimumVersion()
+defaultCacheDirectory()
 
 }
 \author{

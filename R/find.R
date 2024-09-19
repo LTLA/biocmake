@@ -11,11 +11,11 @@
 #'
 #' @author Aaron Lun
 #' @examples
-#' cmd <- findCmake()
+#' cmd <- find()
 #' system2(cmd, "--version")
 #'
 #' @export
-findCmake <- function(
+find <- function(
     command=defaultCmakeCommand(),
     minimum.version=defaultCmakeMinimumVersion(),
     download=TRUE,

@@ -11,10 +11,10 @@
 #' @author Aaron Lun
 #'
 #' @examples
-#' downloadCmake()
+#' download()
 #'
 #' @export
-downloadCmake <- function(download.version=defaultCmakeDownloadVersion(), cache.dir=defaultCmakeCacheDirectory(), ignore.cache=FALSE) {
+download <- function(download.version=defaultDownloadVersion(), cache.dir=defaultCacheDirectory(), ignore.cache=FALSE) {
     sinfo <- Sys.info()
     ssys <- sinfo[["sysname"]]
     if (ssys == "Linux") {
