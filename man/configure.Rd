@@ -2,23 +2,48 @@
 % Please edit documentation in R/configure.R
 \name{configure}
 \alias{configure}
+\alias{formatArguments}
 \title{Configure Cmake}
 \usage{
-configure(compact = TRUE)
+configure(
+  c.compiler = TRUE,
+  cxx.compiler = TRUE,
+  fortran.compiler = TRUE,
+  make = TRUE,
+  ar = TRUE,
+  ranlib = TRUE
+)
+
+formatArguments(options)
 }
 \arguments{
-\item{compact}{Logical scalar indicating whether to format the options as Cmake command-line arguments.}
+\item{c.compiler}{Logical scalar indicating whether to propagate R's choice of C compiler.}
+
+\item{cxx.compiler}{Logical scalar indicating whether to propagate R's choice of C++ compiler.}
+
+\item{fortran.compiler}{Logical scalar indicating whether to propagate R's choice of Fortran compiler.}
+
+\item{make}{Logical scalar indicating whether to propagate R's choice of \code{make} command.}
+
+\item{ar}{Logical scalar indicating whether to propagate R's choice of command to make static libraries.}
+
+\item{ranlib}{Logical scalar indicating whether to propagate R's choice of command to index static libraries.}
+
+\item{options}{Character vector of optional arguments from \code{configure}.}
 }
 \value{
-If \code{compact}, a character vector containing CMake command-line arguments.
+For \code{configure}, a named character vector containing the name and value of each option.
 
-Otherwise, a named character vector containing the name and value of each option.
+For \code{formatArguments}, a character vector with Cmake arguments on the command line.
+\code{NA} values are ignored, and values with spaces or empty strings are quoted.
 }
 \description{
 Propagate R's configuration variables into the Cmake options, where possible.
 }
 \examples{
-configure()
+options <- configure()
+options
+formatArguments(options)
 
 }
 \author{
