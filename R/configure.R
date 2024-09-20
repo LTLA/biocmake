@@ -60,7 +60,12 @@ configure <- function(
          options[["CMAKE_OSX_DEPLOYMENT_TARGET"]] <- "" # avoiding hard-coding of exact OSX version.
     }
 
-    r.self <- file.path(R.home("bin"), "R")
+    if (.Platform$OS.type == "windows") {
+        r.bin <- "R.exe"
+    } else {
+        r.bin <- "R"
+    }
+    r.self <- file.path(R.home("bin"), r.bin)
 
     precursor <- character()
     if (cpp.flags) {
