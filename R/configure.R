@@ -15,6 +15,8 @@
 #' @param make Logical scalar indicating whether to propagate R's choice of \code{make} command.
 #' @param ar Logical scalar indicating whether to propagate R's choice of command to make static libraries.
 #' @param ranlib Logical scalar indicating whether to propagate R's choice of command to index static libraries.
+#' @param release.build Logical scalar indicating whether to configure Cmake for a release build.
+#' Note that this has no effect on Windows, where the release flags must be set during the build itself.
 #' @param options Character vector of optional arguments from \code{configure}.
 #'
 #' @return

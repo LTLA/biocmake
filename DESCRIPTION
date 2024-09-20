@@ -20,4 +20,6 @@ Suggests:
     testthat
 biocViews:
     Infrastructure
+URL: https://github.com/LTLA/biocmake
+BugReports: https://github.com/LTLA/biocmake/issues
 RoxygenNote: 7.3.2

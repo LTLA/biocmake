@@ -29,6 +29,7 @@
 NULL
 
 #' @export
+#' @rdname defaults
 defaultCommand <- function() {
     Sys.getenv("BIOCMAKE_CMAKE_COMMAND", "cmake")
 }

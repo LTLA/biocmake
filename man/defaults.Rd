@@ -2,11 +2,14 @@
 % Please edit documentation in R/defaults.R
 \name{defaults}
 \alias{defaults}
+\alias{defaultCommand}
 \alias{defaultDownloadVersion}
 \alias{defaultMinimumVersion}
 \alias{defaultCacheDirectory}
 \title{Defaults for \pkg{biocmake}}
 \usage{
+defaultCommand()
+
 defaultDownloadVersion()
 
 defaultMinimumVersion()
