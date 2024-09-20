@@ -26,13 +26,15 @@ find <- function(
         return(override)
     }
 
-    test <- system2(command, "--version", stdout=TRUE)
-    vstring <- test[grep("cmake version ", test[1])]
-    vstring <- gsub("cmake version ", "", vstring)
-    version <- package_version(vstring)
+    if (Sys.which(command) != "") {
+        test <- system2(command, "--version", stdout=TRUE)
+        vstring <- test[grep("cmake version ", test[1])]
+        vstring <- gsub("cmake version ", "", vstring)
+        version <- package_version(vstring)
 
-    if (version >= minimum.version) {
-        return(command)
+        if (version >= minimum.version) {
+            return(command)
+        }
     }
 
     if (!can.download) {
