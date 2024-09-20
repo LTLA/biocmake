@@ -26,6 +26,10 @@ String containing the command to use to run Cmake.
 \description{
 Find an existing Cmake installation or, if none can be found, install a \pkg{biocmake}-managed Cmake instance.
 }
+\details{
+If the \code{BIOCMAKE_FIND_OVERRIDE} environment variable is set to a command or path to a Cmake executable,
+it is returned directly and all other options are ignored.
+}
 \examples{
 cmd <- find()
 system2(cmd, "--version")
