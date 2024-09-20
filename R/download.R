@@ -112,7 +112,7 @@ get_cmake_windows <- function(download.version, cache.dir, ignore.cache) {
     if (!file.exists(output)) {
         sinfo <- Sys.info()
         smach  <- sinfo[["machine"]]
-        if (smach == "x64_86") {
+        if (smach %in% c("x86_64", "x86-64")) {
             format <- "cmake-%s-windows-x86_64.zip"
         } else {
             format <- "cmake-%s-windows-arm64.zip"
