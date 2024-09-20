@@ -15,16 +15,17 @@
 #'
 #' @export
 download <- function(download.version=defaultDownloadVersion(), cache.dir=defaultCacheDirectory(), ignore.cache=FALSE) {
+    if (.Platform$OS.type == "windows") {
+        return(get_cmake_windows(download.version, cache.dir=cache.dir, ignore.cache=ignore.cache))
+    }
+
     sinfo <- Sys.info()
     ssys <- sinfo[["sysname"]]
-    if (ssys == "Linux") {
-        return(get_cmake_linux(download.version, cache.dir=cache.dir, ignore.cache=ignore.cache))
-    } else if (ssys == "Darwin") {
+    if (ssys == "Darwin") {
         return(get_cmake_macos(download.version, cache.dir=cache.dir, ignore.cache=ignore.cache))
-    } else {
-        # TODO
-        stop("unsupported operating system")
-    }
+    } 
+
+    return(get_cmake_linux(download.version, cache.dir=cache.dir, ignore.cache=ignore.cache))
 }
 
 release_url <- function(download.version, format) {
@@ -41,14 +42,14 @@ quick_download <- function(url) {
 }
 
 #' @importFrom utils untar
-robust_unpack <- function(tarfile, dest) {
+robust_unpack <- function(archive, dest, FUN=untar) {
     parent <- dirname(dest)
     dir.create(parent, recursive=TRUE, showWarnings=FALSE)
 
     tmp <- tempfile(tmpdir=parent)
     on.exit(unlink(tmp, recursive=TRUE))
 
-    untar(tarfile, exdir=tmp)
+    FUN(archive, exdir=tmp)
     listing <- list.files(tmp)
     stopifnot(length(listing) == 1L)
     inner <- file.path(tmp, listing[1]) # reducing some of the nesting.
@@ -99,4 +100,29 @@ get_cmake_macos <- function(download.version, cache.dir, ignore.cache) {
     }
 
     file.path(output, "CMake.app", "Contents", "bin", "cmake")
+}
+
+#' @importFrom utils unzip
+get_cmake_windows <- function(download.version, cache.dir, ignore.cache) {
+    output <- file.path(cache.dir, download.version)
+    if (ignore.cache) {
+        unlink(output, recursive=TRUE)
+    }
+
+    if (!file.exists(output)) {
+        sinfo <- Sys.info()
+        smach  <- sinfo[["machine"]]
+        if (smach %in% c("x86_64", "x86-64")) {
+            format <- "cmake-%s-windows-x86_64.zip"
+        } else {
+            format <- "cmake-%s-windows-arm64.zip"
+        }
+
+        url <- release_url(download.version, format)
+        full.path <- quick_download(url)
+        on.exit(unlink(full.path))
+        robust_unpack(full.path, output, FUN=unzip)
+    }
+
+    file.path(output, "bin", "cmake.exe")
 }
