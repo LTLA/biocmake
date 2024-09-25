@@ -23,6 +23,7 @@ String containing the path to the Cmake executable.
 }
 \description{
 Download Cmake binaries for the current architecture.
+This uses \pkg{dir.expiry} to remove unused versions of the \pkg{biocmake}-managed Cmake.
 }
 \examples{
 download()

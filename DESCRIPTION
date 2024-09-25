@@ -12,7 +12,8 @@ Encoding: UTF-8
 VignetteBuilder: knitr
 Imports:
     utils,
-    tools
+    tools,
+    dir.expiry
 Suggests:
     knitr,
     rmarkdown,

@@ -1,6 +1,7 @@
 #' Download Cmake
 #'
 #' Download Cmake binaries for the current architecture.
+#' This uses \pkg{dir.expiry} to remove unused versions of the \pkg{biocmake}-managed Cmake.
 #'
 #' @param download.version String specifying the Cmake version to download.
 #' @param cache.dir String specifying the location of the directory in which to cache Cmake installations.
@@ -14,115 +15,78 @@
 #' download()
 #'
 #' @export
+#' @importFrom utils untar unzip
 download <- function(download.version=defaultDownloadVersion(), cache.dir=defaultCacheDirectory(), ignore.cache=FALSE) {
     if (.Platform$OS.type == "windows") {
-        return(get_cmake_windows(download.version, cache.dir=cache.dir, ignore.cache=ignore.cache))
+        output <- get_cmake(download.version, cache.dir=cache.dir, ignore.cache=ignore.cache, formatter=get_windows_format, unpacker=unzip)
+        return(file.path(output, "bin", "cmake.exe"))
     }
 
     sinfo <- Sys.info()
     ssys <- sinfo[["sysname"]]
     if (ssys == "Darwin") {
-        return(get_cmake_macos(download.version, cache.dir=cache.dir, ignore.cache=ignore.cache))
-    } 
-
-    return(get_cmake_linux(download.version, cache.dir=cache.dir, ignore.cache=ignore.cache))
-}
-
-release_url <- function(download.version, format) {
-    paste0("https://github.com/Kitware/CMake/releases/download/v", download.version, "/", sprintf(format, download.version))
-}
-
-#' @importFrom utils download.file
-quick_download <- function(url) {
-    tmp <- tempfile()
-    if (download.file(url, tmp) != 0) {
-        stop("failed to download file from '", url, "'")
-    }
-    tmp
-}
-
-#' @importFrom utils untar
-robust_unpack <- function(archive, dest, FUN=untar) {
-    parent <- dirname(dest)
-    dir.create(parent, recursive=TRUE, showWarnings=FALSE)
-
-    tmp <- tempfile(tmpdir=parent)
-    on.exit(unlink(tmp, recursive=TRUE))
-
-    FUN(archive, exdir=tmp)
-    listing <- list.files(tmp)
-    stopifnot(length(listing) == 1L)
-    inner <- file.path(tmp, listing[1]) # reducing some of the nesting.
-
-    if (!file.exists(dest)) { 
-        # This should be atomic enough to protect against multiple processes
-        # trying to do this at the same time. I suppose we could be more
-        # rigorous with a filelock but why bother.
-        file.rename(inner, dest)
-    }
-}
-
-get_cmake_linux <- function(download.version, cache.dir, ignore.cache) {
-    output <- file.path(cache.dir, download.version)
-    if (ignore.cache) {
-        unlink(output, recursive=TRUE)
+        output <- get_cmake(download.version, cache.dir=cache.dir, ignore.cache=ignore.cache, formatter=get_mac_format, unpacker=untar)
+        return(file.path(output, "CMake.app", "Contents", "bin", "cmake"))
     }
 
-    if (!file.exists(output)) {
-        sinfo <- Sys.info()
-        smach  <- sinfo[["machine"]]
-        if (smach == "aarch64") {
-            format <- "cmake-%s-linux-aarch64.tar.gz"
-        } else {
-            format <- "cmake-%s-linux-x86_64.tar.gz"
-        }
-        url <- release_url(download.version, format)
-        full.path <- quick_download(url)
-        on.exit(unlink(full.path))
-        robust_unpack(full.path, output)
-    }
-
+    output <- get_cmake(download.version, cache.dir=cache.dir, ignore.cache=ignore.cache, formatter=get_linux_format, unpacker=untar)
     file.path(output, "bin", "cmake")
 }
 
-get_cmake_macos <- function(download.version, cache.dir, ignore.cache) {
-    output <- file.path(cache.dir, download.version)
-    if (ignore.cache) {
-        unlink(output, recursive=TRUE)
+get_linux_format <- function() {
+    sinfo <- Sys.info()
+    smach  <- sinfo[["machine"]]
+    if (smach == "aarch64") {
+        "cmake-%s-linux-aarch64.tar.gz"
+    } else {
+        "cmake-%s-linux-x86_64.tar.gz"
     }
-
-    if (!file.exists(output)) {
-        format <- "cmake-%s-macos-universal.tar.gz"
-        url <- release_url(download.version, format)
-        full.path <- quick_download(url)
-        on.exit(unlink(full.path))
-        robust_unpack(full.path, output)
-    }
-
-    file.path(output, "CMake.app", "Contents", "bin", "cmake")
 }
 
-#' @importFrom utils unzip
-get_cmake_windows <- function(download.version, cache.dir, ignore.cache) {
+get_mac_format <- function() "cmake-%s-macos-universal.tar.gz"
+
+get_windows_format <- function() {
+    sinfo <- Sys.info()
+    smach  <- sinfo[["machine"]]
+    if (smach %in% c("x86_64", "x86-64")) {
+        "cmake-%s-windows-x86_64.zip"
+    } else {
+        "cmake-%s-windows-arm64.zip"
+    }
+}
+
+#' @importFrom utils download.file
+#' @import dir.expiry
+get_cmake <- function(download.version, cache.dir, ignore.cache, formatter, unpacker) {
     output <- file.path(cache.dir, download.version)
+    lck <- lockDirectory(output, exclusive=(!file.exists(output) || ignore.cache))
+    on.exit(unlockDirectory(lck), add=TRUE, after=FALSE)
+
     if (ignore.cache) {
         unlink(output, recursive=TRUE)
     }
 
     if (!file.exists(output)) {
-        sinfo <- Sys.info()
-        smach  <- sinfo[["machine"]]
-        if (smach %in% c("x86_64", "x86-64")) {
-            format <- "cmake-%s-windows-x86_64.zip"
-        } else {
-            format <- "cmake-%s-windows-arm64.zip"
+        format <- formatter()
+        url <- paste0("https://github.com/Kitware/CMake/releases/download/v", download.version, "/", sprintf(format, download.version))
+        full.path <- tempfile()
+        if (download.file(url, full.path) != 0) {
+            stop("failed to download file from '", url, "'")
         }
+        on.exit(unlink(full.path), add=TRUE, after=FALSE)
 
-        url <- release_url(download.version, format)
-        full.path <- quick_download(url)
-        on.exit(unlink(full.path))
-        robust_unpack(full.path, output, FUN=unzip)
+        tmp <- tempfile(tmpdir=cache.dir)
+        on.exit(unlink(tmp, recursive=TRUE), add=TRUE, after=FALSE)
+        unpacker(full.path, exdir=tmp)
+
+        listing <- list.files(tmp)
+        stopifnot(length(listing) == 1L)
+        inner <- file.path(tmp, listing[1]) # reducing some of the nesting.
+        if (!file.rename(inner, output)) {
+            stop("failed to move cmake binaries to the cache directory")
+        }
     }
 
-    file.path(output, "bin", "cmake.exe")
+    touchDirectory(output)
+    output
 }
