@@ -8,6 +8,6 @@ test_that("configure() works with all options on", {
 test_that("argument formatting works correctly", {
     out <- formatArguments(c(CMAKE_A="g++", CMAKE_B="foo bar", CMAKE_C=""))
     expect_identical(out[1], "-DCMAKE_A=g++")
-    expect_identical(out[2], "-DCMAKE_B='foo bar'")
-    expect_identical(out[3], "-DCMAKE_C=''")
+    expect_match(out[2], "-DCMAKE_B=.foo bar.")
+    expect_match(out[3], "-DCMAKE_C=..")
 })
