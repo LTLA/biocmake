@@ -36,13 +36,7 @@ compile <- function(command, project) {
     config <- biocmake::configure(c.compiler=FALSE, fortran.compiler=FALSE)
     config.args <- biocmake::formatArguments(config)
 
-    if (.Platform$OS.type == "windows") {
-        # No idea why, but it fails for every other name and location. 
-        build <- file.path(project, "build")
-    } else {
-        build <- tempfile()
-    }
-
+    build <- tempfile()
     status <- system2(command, c(config.args, "-S", project, "-B", build))
     stopifnot(status == 0L)
 

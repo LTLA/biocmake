@@ -10,6 +10,7 @@ test_that("download() works as expected", {
 })
 
 test_that("download() works in a mock project", {
+    skip_on_os("windows") # Downloaded version doesn't work; use Rtools's version.
     project <- mock()
     build <- compile(download(), project)
     expect_true(file.exists(file.path(build, "libsuperfoo.a")))
