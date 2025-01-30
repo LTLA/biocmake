@@ -1,5 +1,10 @@
 # Cmake for Bioconductor
 
+|Build|Status|
+|-----|----|
+| Bioc-release | [![](https://bioconductor.org/shields/build/release/bioc/biocmake.svg)](https://bioconductor.org/checkResults/release/bioc-LATEST/biocmake) |
+| Bioc-devel   | [![](https://bioconductor.org/shields/build/devel/bioc/biocmake.svg)](https://bioconductor.org/checkResults/devel/bioc-LATEST/biocmake) | 
+
 Manages a Cmake installation for use in building Bioconductor packages,
 eliminating the need for manual end-user installation of Cmake via `SystemRequirements: cmake`.
 This package is a no-op if a suitable version of Cmake is already present on the host machine,
