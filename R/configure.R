@@ -138,15 +138,23 @@ configure <- function(
 
     if (ar) {
         out <- sub(" .*", "", system2(r.self, c("CMD", "config", "AR"), stdout=TRUE))
-        if (Sys.which(out) != "" || file.exists(out)) {
-            options[["CMAKE_AR"]] <- out
+        as.cmd <- Sys.which(out) # CMAKE_AR expects a path, not a command, apparently.
+        if (as.cmd != "") {
+            out <- unname(as.cmd)
+        }
+        if (file.exists(out)) {
+            options[["CMAKE_AR:FILEPATH"]] <- out
         }
     }
 
     if (ranlib) {
         out <- sub(" .*", "", system2(r.self, c("CMD", "config", "RANLIB"), stdout=TRUE))
-        if (Sys.which(out) != "" || file.exists(out)) {
-            options[["CMAKE_RANLIB"]] <- out
+        as.cmd <- Sys.which(out) # CMAKE_RANLIB expects a path, not a command, apparently.
+        if (as.cmd != "") {
+            out <- unname(as.cmd)
+        }
+        if (file.exists(out)) {
+            options[["CMAKE_RANLIB:FILEPATH"]] <- out
         }
     }
 
