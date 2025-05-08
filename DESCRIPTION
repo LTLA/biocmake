@@ -1,6 +1,6 @@
 Package: biocmake
-Version: 1.1.1
-Date: 2025-05-01
+Version: 1.1.2
+Date: 2025-05-07
 Title: CMake for Bioconductor
 Description:
     Manages the installation of CMake for building Bioconductor packages.

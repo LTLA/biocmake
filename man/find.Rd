@@ -8,6 +8,7 @@ find(
   command = defaultCommand(),
   minimum.version = defaultMinimumVersion(),
   can.download = TRUE,
+  forget = FALSE,
   ...
 )
 }
@@ -18,6 +19,8 @@ find(
 
 \item{can.download}{Logical scalar indicating whether to download Cmake if no acceptable existing installation can be found.}
 
+\item{forget}{Logical scalar indicating whether to forget the results of the last call.}
+
 \item{...}{Further arguments to pass to \code{\link{download}}.}
 }
 \value{
@@ -27,11 +30,13 @@ String containing the command to use to run Cmake.
 Find an existing Cmake installation or, if none can be found, install a \pkg{biocmake}-managed Cmake instance.
 }
 \details{
-If the \code{BIOCMAKE_FIND_OVERRIDE} environment variable is set to a command or path to a Cmake executable,
-it is returned directly and all other options are ignored.
+If the \code{BIOCMAKE_FIND_OVERRIDE} environment variable is set to a command or path to a Cmake executable, it is returned directly and all other options are ignored.
 
 On Windows, it is strongly recommended to download Rtools (see \url{https://cran.r-project.org/bin/windows/Rtools/rtools44/rtools.html}).
 This provides a pre-configured Cmake that is guaranteed to work.
+
+By default, \code{find} will remember the result of its last call in the current R session, to avoid re-checking the versions, cache, etc.
+This can be disabled by setting \code{forget=TRUE} to force a re-check, e.g., to detect a new version of Cmake that was installed while the R session is active.
 }
 \examples{
 cmd <- find()
