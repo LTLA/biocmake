@@ -7,8 +7,8 @@
 
 Manages a Cmake installation for use in building Bioconductor packages,
 eliminating the need for manual end-user installation of Cmake via `SystemRequirements: cmake`.
-This package is a no-op if a suitable version of Cmake is already present on the host machine,
-otherwise it pulls down and installs Cmake from the [official website](https://cmake.org/download/).
+This package is a no-op if a suitably recent version of Cmake is already present on the host machine,
+otherwise it fetches Cmake binaries from the [official website](https://cmake.org/download/).
 
 Usage is as simple as calling:
 

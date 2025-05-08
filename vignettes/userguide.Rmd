@@ -3,7 +3,7 @@ title: Cmake for Bioconductor
 author:
 - name: Aaron Lun
   email: infinite.monkeys.with.keyboards@gmail.com
-date: "Revised: September 18, 2024"
+date: "Revised: May 8, 2025"
 output:
   BiocStyle::html_document
 package: biocmake
@@ -24,18 +24,17 @@ self <- Biocpkg("biocmake")
 # Overview
 
 `r self` provides consistent access to [Cmake](https://cmake.org) for use in building Bioconductor packages.
-The idea is to check if an appropriate version of Cmake is already available on the host machine,
+The idea is to check if a suitably recent version of Cmake is already available on the host machine,
 and if not, download and install a local copy of Cmake managed by `r self`.
-This avoids for end-users to manually install Cmake via `SystemRequirements: cmake`.
+This avoids end-users having to manually install Cmake via `SystemRequirements: cmake`.
 To find the Cmake executable:
 
 ```{r}
 biocmake::find()
 ```
 
-This will return either the Cmake command on the `PATH` (if it is of a suitable version).
-or will return the cached path to a Cmake executable after downloading the binaries (otherwise).
-Developers can use this in a system call in their `configure` scripts to build Cmake projects for their own packages.
+This will return either a Cmake command on the `PATH` (if the version is recent enough) or the cached path to a Cmake executable after downloading the binaries (otherwise).
+Developers can call `find()` in their `configure` scripts to build Cmake projects during their own package's installation.
 
 # Worked example
 
@@ -95,8 +94,7 @@ This ensures that the CMake project is built first so that it is available for l
 
 # Setting defaults
 
-Most default behaviors of `r self` are documented in the following functions,
-which can in turn be controlled by environment variables.
+Most default behaviors of `r self` are captured in the following functions, which can in turn be controlled by environment variables.
 
 ```{r}
 biocmake::defaultCommand()
@@ -112,9 +110,10 @@ Sys.setenv(BIOCMAKE_CMAKE_MINIMUM_VERSION="3.27.4")
 biocmake::defaultMinimumVersion()
 ```
 
+We can also forcibly override the behavior of `find()` by setting the `BIOCMAKE_FIND_OVERRIDE` to some other Cmake executable or command.
+
 # Session information {-}
 
 ```{r}
 sessionInfo()
 ```
-
