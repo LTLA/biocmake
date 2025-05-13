@@ -59,3 +59,10 @@ test_that("find() works in a mock project", {
     build <- compile(find(), project)
     expect_true(file.exists(file.path(build, "libsuperfoo.a")))
 })
+
+test_that("to_version() works for weird versions", {
+    expect_identical(biocmake:::to_version("1.1.1-alpha"), package_version("1.1.1"))
+    expect_identical(biocmake:::to_version("3.23.39a"), package_version("3.23.39"))
+    expect_identical(biocmake:::to_version("4.0.2-dirty"), package_version("4.0.2"))
+    expect_true(is.na(biocmake:::to_version("1.1-foo")))
+})
