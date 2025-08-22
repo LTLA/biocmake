@@ -49,8 +49,7 @@ This also sets the \code{CMAKE_POSITION_INDEPENDENT_CODE} variable.}
 
 \item{ranlib}{Logical scalar indicating whether to propagate R's choice of command to index static libraries.}
 
-\item{release.build}{Logical scalar indicating whether to configure Cmake for a release build.
-Note that this has no effect on Windows, where the release flags must be set during the build itself.}
+\item{release.build}{Logical scalar indicating whether to configure Cmake for a release build.}
 
 \item{options}{Character vector of optional arguments from \code{configure}.}
 }

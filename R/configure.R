@@ -16,7 +16,6 @@
 #' @param ar Logical scalar indicating whether to propagate R's choice of command to make static libraries.
 #' @param ranlib Logical scalar indicating whether to propagate R's choice of command to index static libraries.
 #' @param release.build Logical scalar indicating whether to configure Cmake for a release build.
-#' Note that this has no effect on Windows, where the release flags must be set during the build itself.
 #' @param options Character vector of optional arguments from \code{configure}.
 #'
 #' @return
@@ -54,8 +53,9 @@ configure <- function(
         options[["CMAKE_POSITION_INDEPENDENT_CODE"]] <- "ON"
     }
 
-    if (release.build && .Platform$OS.type != "windows") {
-        options[["CMAKE_BUILD_TYPE"]] <- "Release" # this doesn't work on windows as the release flag is set elsewhere.
+    if (release.build) {
+        # Assuming we're using mingw and Unix makefiles on Windows.
+        options[["CMAKE_BUILD_TYPE"]] <- "Release"
     }
 
     if (Sys.info()[["sysname"]] == "Darwin") {
@@ -90,6 +90,9 @@ configure <- function(
         if (out != "") {
             options[["CMAKE_C_FLAGS"]] <- out
         }
+        if (release.build) {
+            options[["CMAKE_C_FLAGS_RELEASE"]] <- out
+        }
     }
 
     if (cxx.compiler) {
@@ -109,6 +112,9 @@ configure <- function(
         if (out != "") {
             options[["CMAKE_CXX_FLAGS"]] <- out
         }
+        if (release.build) {
+            options[["CMAKE_CXX_FLAGS_RELEASE"]] <- out
+        }
     }
 
     if (fortran.compiler) {
@@ -126,6 +132,9 @@ configure <- function(
         out <- compact(out)
         if (out != "") {
             options[["CMAKE_FORTRAN_FLAGS"]] <- out
+        }
+        if (release.build) {
+            options[["CMAKE_FORTRAN_FLAGS_RELEASE"]] <- out
         }
     }
 
