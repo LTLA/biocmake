@@ -62,8 +62,11 @@ find <- function(
 
 get_version <- function(command) {
     test <- system2(command, "--version", stdout=TRUE)
-    vstring <- test[grep("cmake version ", test[1])]
-    vstring <- gsub("cmake version ", "", vstring)
+    is.version <- grep("cmake version ", test)
+    if (length(is.version) == 0L) {
+        stop("cannot determine CMake version (got '", paste(test, collapse=";"), "')")
+    }
+    vstring <- gsub("cmake version ", "", test[is.version])
     to_version(vstring)
 }
 
