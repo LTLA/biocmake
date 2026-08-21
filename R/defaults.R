@@ -38,13 +38,13 @@ defaultCommand <- function() {
 #' @export
 #' @rdname defaults
 defaultDownloadVersion <- function() {
-    Sys.getenv("BIOCMAKE_CMAKE_DOWNLOAD_VERSION", "3.30.3")
+    Sys.getenv("BIOCMAKE_CMAKE_DOWNLOAD_VERSION", "4.4.2")
 }
 
 #' @export
 #' @rdname defaults
 defaultMinimumVersion <- function() {
-    Sys.getenv("BIOCMAKE_CMAKE_MINIMUM_VERSION", "3.24.0")
+    Sys.getenv("BIOCMAKE_CMAKE_MINIMUM_VERSION", "4.0.0")
 }
 
 #' @export
