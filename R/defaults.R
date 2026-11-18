@@ -44,7 +44,7 @@ defaultDownloadVersion <- function() {
 #' @export
 #' @rdname defaults
 defaultMinimumVersion <- function() {
-    Sys.getenv("BIOCMAKE_CMAKE_MINIMUM_VERSION", "4.0.0")
+    Sys.getenv("BIOCMAKE_CMAKE_MINIMUM_VERSION", "3.30.0")
 }
 
 #' @export
